@@ -6,21 +6,21 @@ import { PriceChart } from '@/components/PriceChart';
 import { BettingInterface } from '@/components/BettingInterface';
 import { BettingHistory } from '@/components/BettingHistory';
 import { useBetting } from '@/hooks/useBetting';
+import { useHashConnect } from '@/hooks/useHashConnect';
 import { pythService } from '@/services/pythService';
 
 export default function Home() {
   const {
     currentPrice,
     currentRound,
-    walletInfo,
     userBets,
     bettingStats,
     isLoading,
     error,
-    connectWallet,
     placeBet,
-    disconnectWallet,
   } = useBetting();
+
+  const { walletInfo, isConnected } = useHashConnect();
 
   const [chartData, setChartData] = useState<any[]>([]);
 
@@ -96,14 +96,9 @@ export default function Home() {
 
           {/* Right Column - Wallet & Betting */}
           <div className="space-y-6">
-            <WalletConnection
-              walletInfo={walletInfo}
-              onConnect={connectWallet}
-              onDisconnect={disconnectWallet}
-              isLoading={isLoading}
-            />
+            <WalletConnection />
 
-            {walletInfo?.isConnected && (
+            {isConnected && walletInfo && (
               <BettingInterface
                 currentRound={currentRound}
                 walletInfo={walletInfo}
@@ -115,7 +110,7 @@ export default function Home() {
         </div>
 
         {/* Betting History */}
-        {walletInfo?.isConnected && (
+        {isConnected && walletInfo && (
           <div className="mt-8">
             <BettingHistory
               bets={userBets}
