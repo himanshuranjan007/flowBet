@@ -1,36 +1,184 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HBet - HBAR/USD Real-time Betting Platform
+
+A decentralized betting platform built on Hedera Hashgraph that allows users to bet on HBAR/USD price movements in real-time using Pyth Network data.
+
+## Features
+
+- 🎯 **Real-time Price Feeds**: Live HBAR/USD price data from Pyth Hermes
+- ⏱️ **60-Second Rounds**: Quick betting rounds with automatic settlement
+- 🔗 **Hedera Integration**: All transactions processed on Hedera blockchain
+- 💰 **Smart Contract Betting**: Transparent, on-chain betting logic
+- 📊 **Live Charts**: Real-time price visualization with Recharts
+- 🎨 **Modern UI**: Beautiful, responsive interface with Tailwind CSS
+
+## Tech Stack
+
+- **Frontend**: Next.js 15, React 19, TypeScript
+- **Styling**: Tailwind CSS
+- **Charts**: Recharts
+- **Blockchain**: Hedera Hashgraph SDK
+- **Price Data**: Pyth Network Hermes
+- **Runtime**: Bun
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- [Bun](https://bun.sh/) installed on your system
+- Hedera testnet account with HBAR tokens
+- Basic understanding of Hedera blockchain
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+git clone <repository-url>
+cd hbet
+```
+
+2. Install dependencies:
+```bash
+bun install
+```
+
+3. Start the development server:
+```bash
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Connecting Your Wallet
 
-## Learn More
+1. Click "Connect Wallet" on the main page
+2. Enter your Hedera account ID (e.g., `0.0.123456`)
+3. Enter your private key
+4. Click "Connect"
 
-To learn more about Next.js, take a look at the following resources:
+**Note**: This is a demonstration implementation. In production, integrate with proper wallet providers like HashPack.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Placing Bets
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Ensure your wallet is connected and has HBAR balance
+2. Wait for a new betting round to start (60-second intervals)
+3. Choose UP or DOWN direction
+4. Enter your bet amount in HBAR
+5. Click "Place Bet"
 
-## Deploy on Vercel
+### How Betting Works
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Rounds**: Each betting round lasts exactly 60 seconds
+- **Settlement**: Bets are automatically settled at the end of each round
+- **Payout**: Winning bets receive 2x the bet amount
+- **Price Source**: All prices come from Pyth Network Hermes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Smart Contract
+
+The betting logic is implemented in a Hedera smart contract that handles:
+
+- Bet placement and validation
+- Price updates from Pyth Network
+- Automatic bet settlement
+- Payout distribution
+
+### Contract Functions
+
+- `placeBet(bool direction)`: Place a bet (true = UP, false = DOWN)
+- `updatePrice(uint256 price)`: Update current round price
+- `settleRound(uint256 endPrice)`: Settle the current round
+- `getBet(uint256 betId)`: Retrieve bet information
+
+## Architecture
+
+```
+src/
+├── app/                 # Next.js app directory
+├── components/          # React components
+│   ├── BettingInterface.tsx
+│   ├── BettingHistory.tsx
+│   ├── PriceChart.tsx
+│   └── WalletConnection.tsx
+├── hooks/               # Custom React hooks
+│   └── useBetting.ts
+├── services/            # External service integrations
+│   ├── hederaService.ts
+│   └── pythService.ts
+├── types/               # TypeScript type definitions
+│   └── index.ts
+└── lib/                 # Utility functions
+```
+
+## Configuration
+
+### Environment Variables
+
+Create a `.env.local` file:
+
+```env
+# Hedera Configuration
+HEDERA_NETWORK=testnet
+HEDERA_ACCOUNT_ID=your_account_id
+HEDERA_PRIVATE_KEY=your_private_key
+
+# Pyth Configuration
+PYTH_HERMES_ENDPOINT=https://hermes.pyth.network/v2/updates
+```
+
+### Hedera Testnet Setup
+
+1. Create a Hedera testnet account at [portal.hedera.com](https://portal.hedera.com)
+2. Get testnet HBAR from the faucet
+3. Note your account ID and private key
+
+## Development
+
+### Running Tests
+
+```bash
+bun test
+```
+
+### Building for Production
+
+```bash
+bun build
+```
+
+### Linting
+
+```bash
+bun lint
+```
+
+## Security Considerations
+
+- **Private Keys**: Never expose private keys in production
+- **Wallet Integration**: Use proper wallet providers like HashPack
+- **Price Validation**: Implement additional price validation mechanisms
+- **Smart Contract Audits**: Audit smart contracts before mainnet deployment
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License.
+
+## Disclaimer
+
+This is a demonstration project for educational purposes. Cryptocurrency betting involves financial risk. Use at your own discretion and never bet more than you can afford to lose.
+
+## Support
+
+For questions or support, please open an issue on GitHub or contact the development team.
+
+---
+
+**Built with ❤️ using Hedera Hashgraph and Pyth Network**
